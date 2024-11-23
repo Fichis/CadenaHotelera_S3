@@ -1,0 +1,354 @@
+/* General Styles */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main Styles */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav li {
+    margin-right: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Banner Styles */
+.banner {
+    position: relative;
+    background-color: #2c3e50;
+    background-image: url('../img/banner.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 60px 20px;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    overflow: hidden;
+}
+
+.banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(121, 133, 145, 0.3);
+    /* Filtro oscuro */
+    z-index: 1;
+    /* Asegúrate de que esté por encima de la imagen, pero por debajo de la estela */
+}
+
+/* Logo Styles */
+.logo img {
+    width: 100px;
+    vertical-align: middle;
+    border-radius: 100%;
+}
+
+/* Hotel Styles */
+.hotel {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    margin: 20px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s, box-shadow 0.3s;
+}
+
+.hotel:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.hotel h3 a {
+    color: #e67e22;
+    margin-bottom: 10px;
+}
+
+.hotel p {
+    margin-bottom: 15px;
+}
+
+/* Services Styles */
+#servicios {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+#servicios.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#servicios ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#servicios li {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+#servicios li:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+}
+
+#servicios p {
+    margin-top: 20px;
+    font-style: italic;
+}
+
+/* Common Section Styles */
+#promociones,
+#blog,
+#nosotros,
+#contacto {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
+/* Promociones Styles */
+#promociones h2 {
+    text-align: center;
+    color: #e67e22;
+    margin-bottom: 20px;
+    font-size: 24px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e67e22;
+}
+
+.promocion {
+    background-color: #f9f9f9;
+    border-left: 5px solid #e67e22;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.promocion:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.promocion h3 {
+    color: #e67e22;
+    margin: 0 0 10px;
+    font-size: 20px;
+}
+
+.promocion p {
+    margin: 0;
+}
+
+/* Blog Styles */
+#blog h2 {
+    text-align: center;
+    color: #e67e22;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e67e22;
+    margin-bottom: 1.5em;
+}
+
+#blog article {
+    margin: 20px 0;
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+}
+
+#blog article:last-child {
+    border-bottom: none;
+}
+
+#blog article h3 {
+    color: #e67e22;
+}
+
+#blog article p {
+    margin: 10px 0;
+}
+
+#blog a {
+    color: #e67e22;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#blog a:hover {
+    text-decoration: underline;
+}
+
+/* Button Styles */
+button {
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #d35400;
+    transform: scale(1.05);
+}
+
+/* Form Styles */
+form {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+input,
+textarea {
+    width: 98%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #e67e22;
+    outline: none;
+}
+
+/* Nosotros Section Styles */
+#nosotros h2 {
+    text-align: center;
+    color: #e67e22;
+    border-bottom: 2px solid #e67e22;
+}
+
+.mision-vision,
+.valores,
+.historia {
+    margin-top: 20px;
+}
+
+.mision-vision h3,
+.valores h3,
+.historia h3 {
+    color: #e67e22;
+}
+
+.valores ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.valores li {
+    padding: 5px 0;
+}
+
+/* Contact Info Styles */
+#contacto {
+    text-align: center;
+}
+
+#contacto p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+/* Testimonials Styles */
+blockquote {
+    font-style: italic;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-left: 5px solid #e67e22;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+footer nav a {
+    color: white;
+}
+
+.estela {
+    position: absolute;
+    width: 50px;
+    /* Aumentar el tamaño */
+    height: 50px;
+    /* Aumentar el tamaño */
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 223, 0, 0.8), rgba(255, 223, 0, 0));
+    /* Degradado dorado */
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    box-shadow: 0 0 50px rgba(255, 223, 0, 1), 0 0 100px rgba(255, 223, 0, 0.5);
+    /* Sombra más difusa */
+    transform: scale(1);
+    /* Escala inicial */
+    z-index: 2;
+    /* Asegúrate de que esté por encima del filtro */
+}

@@ -1,6 +1,6 @@
 #? Creación del bucket para hacerlo servidor web
 resource "aws_s3_bucket" "CadenaHoteleraBucket" {
-  bucket = "asccadenahotelerabucket"
+  bucket        = var.bucket_name
   force_destroy = true
 
   tags = {
@@ -10,28 +10,26 @@ resource "aws_s3_bucket" "CadenaHoteleraBucket" {
 }
 
 #? Creación de la política
-data "aws_iam_policy_document" "allow_access" {
-  statement {
-    principals {
-      type        = "AWS"
-      identifiers = ["123456789012"]
-    }
-
-    actions = [
-      "s3:GetObject",
-    ]
-
-    resources = [
-      aws_s3_bucket.CadenaHoteleraBucket.arn,
-      "${aws_s3_bucket.CadenaHoteleraBucket.arn}/*",
-    ]
-  }
-}
-
-#? Asociación de la política al bucket
-resource "aws_s3_bucket_policy" "public_bucket" {
+resource "aws_s3_bucket_policy" "allow_access" {
   bucket = aws_s3_bucket.CadenaHoteleraBucket.id
-  policy = data.aws_iam_policy_document.allow_access.json
+
+  policy = jsonencode(
+    {
+      "Id" : "Policy1733051191073",
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Sid" : "Stmt1733051188897",
+          "Action" : [
+            "s3:GetObject"
+          ],
+          "Effect" : "Allow",
+          "Resource" : "arn:aws:s3:::${aws_s3_bucket.CadenaHoteleraBucket.bucket}/*",
+          "Principal" : "*"
+        }
+      ]
+    }
+  )
 }
 
 #? Hacerlo servidor web
@@ -56,10 +54,21 @@ resource "aws_s3_bucket_ownership_controls" "bucket-owner" {
   }
 }
 
+#? Para hacer el bucket público
+resource "aws_s3_bucket_public_access_block" "bucket-public-access" {
+  bucket = aws_s3_bucket.CadenaHoteleraBucket.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
 #? Deshabilito la seguridad por defecto del Bucket S3 para hacer los objetos publicos
 resource "aws_s3_bucket_acl" "bucket-acl" {
   depends_on = [
-    aws_s3_bucket_ownership_controls.bucket-owner
+    aws_s3_bucket_ownership_controls.bucket-owner,
+    aws_s3_bucket_public_access_block.bucket-public-access,
   ]
 
   bucket = aws_s3_bucket.CadenaHoteleraBucket.id

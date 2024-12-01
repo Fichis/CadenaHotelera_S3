@@ -37,7 +37,7 @@ resource "aws_s3_bucket_website_configuration" "bucket-web-config" {
   bucket = aws_s3_bucket.CadenaHoteleraBucket.id
 
   index_document {
-    suffix = "Website/index.html"
+    suffix = "/Website/index.html"
   }
 
   /* error_document {

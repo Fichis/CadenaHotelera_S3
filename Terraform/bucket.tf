@@ -40,9 +40,9 @@ resource "aws_s3_bucket_website_configuration" "bucket-web-config" {
     suffix = "index.html"
   }
 
-  error_document {
+  /* error_document {
     key = "error.html"
-  }
+  } */
 }
 
 #? Soy el propietario del bucket
@@ -73,6 +73,15 @@ resource "aws_s3_bucket_acl" "bucket-acl" {
 
   bucket = aws_s3_bucket.CadenaHoteleraBucket.id
   acl    = "public-read"
+}
+
+#? Añado los archivos al bucket
+resource "aws_s3_object" "archivos" {
+  for_each = fileset("../Website", "**/*")  
+
+  bucket = aws_s3_bucket.CadenaHoteleraBucket.bucket
+  key    = "Website/${each.value}"
+  source = "../Website/${each.value}"
 }
 
 # Output para la URL del bucket S3

@@ -1,0 +1,99 @@
+name: Terraform AWS Deployment
+
+on:
+  push:
+    branches: 
+      - main
+
+
+jobs:
+  despliegue:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      AWS_DEFAULT_REGION: "us-east-1"
+
+    steps:
+      #! Clonamos el repositorio en la máquina ubuntu
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      #! Nos movemos al directorio donde está el terraform e inicializamos la configuracion
+      - name: INICIAR TERRAFORM
+        run: |
+          pwd
+          cd ./Terraform
+          pwd
+          terraform init
+
+      #! Hacemos un plan para ver qué va a crear
+      - name: Plan Terraform
+        #? Le hago un out para sacar el plan en un archivo (el nombre que quiera) y terraform sepa exactamente qué hacer
+        run: |
+          pwd
+          cd ./Terraform
+          pwd
+          terraform plan -out=tfplan 
+      
+      #! Terraform apply para que realice la IaC (Infra como Code)
+      - name: Apply Terraform
+        id: apply_terraform
+        #? Aquí hay que indicarle el archivo que indicamos en el out. Me ahorro el auto-approve
+        run: |
+          pwd
+          cd ./Terraform
+          pwd
+          terraform apply tfplan 
+
+      #! Verificar outputs
+      - name: Verificar outputs de Terraform
+        run: |
+          cd ./Terraform
+          terraform output
+
+      #! Aprovecho mi output de terraform para obtener la IP Pública
+      - name: Obtener la dirección IP pública de la instancia
+        id: get_instance
+        run: |
+          pwd
+          cd ./Terraform
+          pwd
+          instance_public_ip=$(terraform output -raw instance_public_ip)
+          echo "public_ip=$instance_public_ip" >> $GITHUB_ENV
+
+      #! Comprimo la carpeta de la web
+      - name: Comprimir la carpeta Website
+        run: |
+          pwd
+          ls -la
+          zip -r Website.zip ./Website
+      
+      #! Espero 40 segundos para asegurarme de que la instancia esté lista
+      - name: Esperar para que la instancia EC2 esté lista
+        run: sleep 40
+
+      #! Traspaso la carpeta comprimido a la máquina EC2
+      - name: Copiar archivos a la instancia
+        run: |
+          pwd
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > my-key-pair
+          chmod 600 my-key-pair
+          sudo apt-get install ssh rsync
+          scp -o StrictHostKeyChecking=no -i my-key-pair ./Website.zip ubuntu@${{ env.public_ip }}:/home/ubuntu
+
+      #! Me conecto a la máquina EC2 para descomprimir el archivo
+      - name: Entrar a la máquina y mover archivos
+        run: |
+          pwd
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > my-key-pair
+          chmod 600 my-key-pair
+          ssh -o StrictHostKeyChecking=no -T -i my-key-pair ubuntu@${{ env.public_ip }} << 'EOF'
+          ls
+          cd /home/ubuntu
+          ls
+          sudo apt install unzip -y
+          unzip Website.zip
+          sudo mv ./Website /var/www/html
+          EOF

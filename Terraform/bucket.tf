@@ -37,12 +37,8 @@ resource "aws_s3_bucket_website_configuration" "bucket-web-config" {
   bucket = aws_s3_bucket.CadenaHoteleraBucket.id
 
   index_document {
-    suffix = "/Website/index.html"
+    suffix = "index.html"
   }
-
-  /* error_document {
-    key = "error.html"
-  } */
 }
 
 #? Soy el propietario del bucket
@@ -75,14 +71,21 @@ resource "aws_s3_bucket_acl" "bucket-acl" {
   acl    = "public-read"
 }
 
-#? Añado los archivos al bucket
-resource "aws_s3_object" "archivos" {
-  for_each = fileset("../Website", "**/*")  
-
-  bucket = aws_s3_bucket.CadenaHoteleraBucket.bucket
-  key    = "Website/${each.value}"
-  source = "../Website/${each.value}"
+#? Leer el archivo JSON generado por el script
+data "local_file" "file_list" {
+  filename = "files_list.json"
 }
+
+#? Añado los archivos al bucket
+resource "aws_s3_object" "upload_files" {
+  for_each = { for idx, file in jsondecode(data.local_file.file_list.content) : idx => file }
+
+  bucket       = aws_s3_bucket.CadenaHoteleraBucket.bucket
+  key          = each.value.key
+  source       = each.value.source
+  content_type = each.value.content_type
+}
+
 
 # Output para la URL del bucket S3
 output "s3_bucket_website_url" {

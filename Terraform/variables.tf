@@ -9,3 +9,8 @@ variable "bucket_name" {
   default = "mybucketexample"
   type = string
 }
+
+variable "file_path" {
+	description = "Directorio de archivos a subir"
+	type        = string
+}
